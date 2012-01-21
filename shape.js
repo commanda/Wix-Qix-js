@@ -32,6 +32,13 @@ Shape.prototype.draw = function() {
 
 Shape.prototype.addPoint = function(point) {
     
+    // If there aren't any points already in this shape, then this new point becomes the top, bottom, left, and right of the shape.
+    if(this.points.length == 0)
+    {
+        this.top = this.bottom = point.y;
+        this.left = this.right = point.x;
+    }
+    
     this.points.push(point);
     console.log("pushing point to make " + this.points);
     

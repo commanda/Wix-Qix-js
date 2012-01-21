@@ -23,11 +23,11 @@ Cursor.prototype.draw = function(){
     ctx.lineWidth = 1;
     // Draw a diamond
     ctx.beginPath();
-    ctx.moveTo(this.x, this.y);
-    ctx.lineTo(this.x + (this.size/2), this.y - (this.size/2));
-    ctx.lineTo(this.x + this.size, this.y);
-    ctx.lineTo(this.x + (this.size/2), this.y + (this.size/2));
-    ctx.lineTo(this.x, this.y);
+    ctx.moveTo(this.x - (this.size/2), this.y);
+    ctx.lineTo(this.x, this.y - (this.size/2));
+    ctx.lineTo(this.x + (this.size/2), this.y);
+    ctx.lineTo(this.x, this.y + (this.size/2));
+    ctx.lineTo(this.x - (this.size/2), this.y);
     ctx.stroke();
     ctx.closePath();
 }
@@ -53,15 +53,15 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     }
     
     // Prevent the cursor from going outside the bounds of the canvas
-    console.log("bo.top: " + boardOutline.top);
+    
     if(this.y <= boardOutline.top) 
     {
         this.y = boardOutline.top;
         console.log("bo.top: " + boardOutline.top);
     }
-    if(this.y >= boardOutline.bottom - this.size)
+    if(this.y >= boardOutline.bottom)
     {
-        this.y = boardOutline.bottom - this.size;
+        this.y = boardOutline.bottom;
         console.log("bo.bot: " + boardOutline.bottom);
     }
     if(this.x <= boardOutline.left)
@@ -69,9 +69,9 @@ Cursor.prototype.handleArrowPress = function(keyCode){
         this.x = boardOutline.left;
         console.log("bo.left: " + boardOutline.left);
     }
-    if(this.x >= boardOutline.right - this.size)
+    if(this.x >= boardOutline.right)
     {
-        this.x = boardOutline.right - this.size;
+        this.x = boardOutline.right;
         console.log("bo.right: " + boardOutline.right);
     }
 }
