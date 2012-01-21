@@ -11,15 +11,25 @@ function Cursor () {
     this.size = 10;
     
     // Where the cursor is on the screen (its upper left corner)
-    this.x = 0;
-    this.y = 0;
+    this.x = 30;
+    this.y = 30;
 }
 
 
 // What the Cursor DOES
 Cursor.prototype.draw = function(){
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.size, this.size);
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = 1;
+    // Draw a diamond
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y);
+    ctx.lineTo(this.x + (this.size/2), this.y - (this.size/2));
+    ctx.lineTo(this.x + this.size, this.y);
+    ctx.lineTo(this.x + (this.size/2), this.y + (this.size/2));
+    ctx.lineTo(this.x, this.y);
+    ctx.stroke();
+    ctx.closePath();
 }
 
 Cursor.prototype.handleArrowPress = function(keyCode){
