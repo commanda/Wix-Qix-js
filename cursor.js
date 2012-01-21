@@ -18,6 +18,8 @@ function Cursor () {
     this.isOnSide = true;
     
     this.currentShape = null;
+    
+    this.lastPoint = null;
 }
 
 
@@ -100,21 +102,48 @@ Cursor.prototype.handleArrowPress = function(keyCode){
             // Put this shape into the game's shapes array
             shapes.push(this.currentShape);
             this.currentShape.strokeColor = '#0f6d6c';
+            
+            // Add the wall we were just on to the shape to be its starting point
+            // so that shapes don't look like they're disconnected from the wall
+            this.currentShape.addPoint(this.lastPoint);
         }
+        
+        
         // Add a point to our shape
-        this.currentShape.addPoint(new Point(this.x, this.y));    
+        this.currentShape.addPoint(new Point(this.x, this.y)); 
+           
     }
     // Otherwise, if we are on a side, then we've finished our last shape
     else
     {
         if(this.currentShape)
         {
-            // Turn the outline of the shape white, and turn the fill color of the shape to whatever the outline used to be
-            this.currentShape.fillColor = this.currentShape.strokeColor;
-            this.currentShape.strokeColor = '#fff';
-            // Lose our reference to the old current shape because we're done with it now
-            this.currentShape = null;
+            
+            this.closeOutShape(this.currentShape);
+            
         }
     }
     
+    // Keep this point because we might need it the next time we press a button to know where we just were
+    this.lastPoint = new Point(this.x, this.y);
+    
 }
+
+
+Cursor.prototype.closeOutShape = function(shape)
+{
+
+    // Add the final point to our shape
+    this.currentShape.addPoint(new Point(this.x, this.y)); 
+
+    // Turn the outline of the shape white, and turn the fill color of the shape to whatever the outline used to be
+    this.currentShape.fillColor = this.currentShape.strokeColor;
+    this.currentShape.strokeColor = '#fff';
+    
+    // It's now a closed shape
+    this.currentShape.isClosed = true;
+    
+    // Lose our reference to the old current shape because we're done with it now
+    this.currentShape = null;
+}
+
