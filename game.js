@@ -48,7 +48,7 @@ $(window).bind("keydown", function(e){
 
 // Wipe the screen by filling it with the background color
 var drawBackground = function(){
-    ctx.fillStyle = '#d0e7f9';
+    ctx.fillStyle = '#000';
     ctx.beginPath();
     ctx.rect(0, 0, screenWidth, screenHeight);
     ctx.closePath();

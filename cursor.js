@@ -33,7 +33,7 @@ Cursor.prototype.draw = function(){
     // Draw the cursor itself
     ctx.fillStyle = this.color;
     ctx.strokeStyle = this.color;
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 3;
     // Draw a diamond
     ctx.beginPath();
     ctx.moveTo(this.x - (this.size/2), this.y);
@@ -102,6 +102,7 @@ Cursor.prototype.handleArrowPress = function(keyCode){
         if(!this.currentShape)
         {
             this.currentShape = new Shape();
+            this.currentShape.strokeColor = '#0f6d6c';
         }
         // Add a point to our shape
         this.currentShape.addPoint(new Point(this.x, this.y));    
