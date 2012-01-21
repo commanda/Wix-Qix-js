@@ -22,11 +22,15 @@ var boardOutline = new Shape();
 boardOutline.strokeColor = '#fff';
 boardOutline.fillColor = '#000';
 boardOutline.isClosed = true;
-boardOutline.points = new Array(new Point(30, 30), 
+var bOPoints = new Array(new Point(30, 30), 
                                 new Point(screenWidth-30, 30),
                                 new Point(screenWidth-30, screenHeight-30),
                                 new Point(30, screenHeight-30));
-
+var i = 0;
+for(i = 0; i < bOPoints.length; i++)
+{
+    boardOutline.addPoint(bOPoints[i]);
+}
 
 
 // Handling keyboard input - this function gets called whenever a key is pressed

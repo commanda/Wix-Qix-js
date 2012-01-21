@@ -53,12 +53,25 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     }
     
     // Prevent the cursor from going outside the bounds of the canvas
-    if(this.y <= 0)
-        this.y = 0;
-    if(this.y >= screenHeight - this.size)
-        this.y = screenHeight - this.size;
-    if(this.x <= 0)
-        this.x = 0;
-    if(this.x >= screenWidth - this.size)
-        this.x = screenWidth - this.size;
+    console.log("bo.top: " + boardOutline.top);
+    if(this.y <= boardOutline.top) 
+    {
+        this.y = boardOutline.top;
+        console.log("bo.top: " + boardOutline.top);
+    }
+    if(this.y >= boardOutline.bottom - this.size)
+    {
+        this.y = boardOutline.bottom - this.size;
+        console.log("bo.bot: " + boardOutline.bottom);
+    }
+    if(this.x <= boardOutline.left)
+    {
+        this.x = boardOutline.left;
+        console.log("bo.left: " + boardOutline.left);
+    }
+    if(this.x >= boardOutline.right - this.size)
+    {
+        this.x = boardOutline.right - this.size;
+        console.log("bo.right: " + boardOutline.right);
+    }
 }

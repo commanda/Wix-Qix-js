@@ -3,6 +3,9 @@ function Shape () {
     this.strokeColor = '#fff';
     this.fillColor = '#000';
     this.isClosed = false;
+    
+    // Read-only for outsiders (by convention, not enforced, i guess)
+    this.top = this.bottom = this.left = this.right = 0;
 }
 
 Shape.prototype.draw = function() {
@@ -25,4 +28,16 @@ Shape.prototype.draw = function() {
     
     ctx.stroke();
     ctx.closePath();
+}
+
+Shape.prototype.addPoint = function(point) {
+    
+    this.points.push(point);
+    console.log("pushing point to make " + this.points);
+    
+    if(point.x < this.left){ this.left = point.x; }
+    if(point.x > this.right){ this.right = point.x; }
+    if(point.y < this.top){ this.top = point.y; }
+    if(point.y > this.bottom){ this.bottom = point.y; }
+    
 }
