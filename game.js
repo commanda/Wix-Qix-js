@@ -20,7 +20,6 @@ var timeout;
 
 var boardOutline = new Shape();
 boardOutline.strokeColor = '#fff';
-boardOutline.fillColor = '#000';
 boardOutline.isClosed = true;
 var bOPoints = new Array(new Point(30, 30), 
                                 new Point(screenWidth-30, 30),
@@ -48,7 +47,7 @@ $(window).bind("keydown", function(e){
 
 // Wipe the screen by filling it with the background color
 var drawBackground = function(){
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = '#666';
     ctx.beginPath();
     ctx.rect(0, 0, screenWidth, screenHeight);
     ctx.closePath();
@@ -68,8 +67,8 @@ var runLogic = function(){
 // The draw function - where we tell everything to draw itself to the screen
 var draw = function(){
     // Draw all our shapes
-    var i = 0;
-    for(i = 0; i < shapes.length; i++)
+    var i = shapes.length-1;
+    for(; i >= 0; i--)
     {
         shapes[i].draw();
     }

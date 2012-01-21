@@ -24,11 +24,6 @@ function Cursor () {
 // What the Cursor DOES
 Cursor.prototype.draw = function(){
 
-    // Draw our current shape
-    if(this.currentShape)
-    {
-        this.currentShape.draw();
-    }
     
     // Draw the cursor itself
     ctx.fillStyle = this.color;
@@ -102,6 +97,8 @@ Cursor.prototype.handleArrowPress = function(keyCode){
         if(!this.currentShape)
         {
             this.currentShape = new Shape();
+            // Put this shape into the game's shapes array
+            shapes.push(this.currentShape);
             this.currentShape.strokeColor = '#0f6d6c';
         }
         // Add a point to our shape
@@ -112,8 +109,10 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     {
         if(this.currentShape)
         {
-            // Give our shape to the Game so it can keep track of it and do shit with it
-            shapes.push(this.currentShape);
+            // Turn the outline of the shape white, and turn the fill color of the shape to whatever the outline used to be
+            this.currentShape.fillColor = this.currentShape.strokeColor;
+            this.currentShape.strokeColor = '#fff';
+            // Lose our reference to the old current shape because we're done with it now
             this.currentShape = null;
         }
     }

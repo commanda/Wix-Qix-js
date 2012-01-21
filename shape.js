@@ -1,7 +1,7 @@
 function Shape () {
     this.points = new Array();
     this.strokeColor = '#fff';
-    this.fillColor = '#000';
+    this.fillColor = null;
     this.isClosed = false;
     
     // Read-only for outsiders (by convention, not enforced, i guess)
@@ -11,6 +11,13 @@ function Shape () {
 Shape.prototype.draw = function() {
     // Traverse the points array and stroke the line of them
     ctx.strokeStyle = this.strokeColor;
+
+    // Turn on the fill color only if it's something other than null
+    if(this.fillColor)
+    {
+        ctx.fillStyle = this.fillColor;
+    }
+    
     ctx.lineWidth = 2;
     ctx.lineCap = "round";
     ctx.beginPath();
@@ -26,6 +33,10 @@ Shape.prototype.draw = function() {
         ctx.lineTo(this.points[0].x, this.points[0].y);
     }
     
+    if(this.fillColor)
+    {
+        ctx.fill();
+    }
     ctx.stroke();
     ctx.closePath();
 }
