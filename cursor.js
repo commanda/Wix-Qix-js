@@ -13,11 +13,25 @@ function Cursor () {
     // Where the cursor is on the screen (its upper left corner)
     this.x = 30;
     this.y = 30;
+    
+    // The cursor starts out at the upper left corner of the board, so it is on a side (it's actually on two sides, top and left)
+    this.isOnSide = true;
+    
+    this.currentShape = null;
+    this.lastKeyCode = 0;
 }
 
 
 // What the Cursor DOES
 Cursor.prototype.draw = function(){
+
+    // Draw our current shape
+    if(this.currentShape)
+    {
+        this.currentShape.draw();
+    }
+    
+    // Draw the cursor itself
     ctx.fillStyle = this.color;
     ctx.strokeStyle = this.color;
     ctx.lineWidth = 1;
@@ -52,26 +66,49 @@ Cursor.prototype.handleArrowPress = function(keyCode){
             break;
     }
     
+    // The cursor isn't on a side of the boardOutline unless we find out below that it is
+    this.isOnSide = false;
+    
     // Prevent the cursor from going outside the bounds of the canvas
     
     if(this.y <= boardOutline.top) 
     {
         this.y = boardOutline.top;
-        console.log("bo.top: " + boardOutline.top);
+        console.log("top: " + boardOutline.top);
+        this.isOnSide = true;
     }
     if(this.y >= boardOutline.bottom)
     {
         this.y = boardOutline.bottom;
-        console.log("bo.bot: " + boardOutline.bottom);
+        console.log("bot: " + boardOutline.bottom);
+        this.isOnSide = true;
     }
     if(this.x <= boardOutline.left)
     {
         this.x = boardOutline.left;
-        console.log("bo.left: " + boardOutline.left);
+        console.log("left: " + boardOutline.left);
+        this.isOnSide = true;
     }
     if(this.x >= boardOutline.right)
     {
         this.x = boardOutline.right;
-        console.log("bo.right: " + boardOutline.right);
+        console.log("right: " + boardOutline.right);
+        this.isOnSide = true;
     }
+    
+    // If we're not on a side, then we're in the middle of making a shape.
+    if(!this.isOnSide)
+    {
+        if(this.lastKeyCode != keyCode)
+        {
+            // Create our current shape if we don't yet have one
+            if(!this.currentShape)
+            {
+                this.currentShape = new Shape();
+            }
+            // Add a point to our shape
+            this.currentShape.addPoint(new Point(this.x, this.y));
+        }
+    }
+    
 }
