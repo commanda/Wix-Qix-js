@@ -32,11 +32,8 @@ for(i = 0; i < bOPoints.length; i++)
     boardOutline.addPoint(bOPoints[i]);
 }
 
-
-// Handling keyboard input - this function gets called whenever a key is pressed
-//window.onkeyup = function(e) {
-//    console.log("e: ", e.charCode);
-//}
+// Here's where we'll keep all our completed shapes
+var shapes = new Array();
 
 $(window).bind("keydown", function(e){
     
@@ -60,6 +57,7 @@ var drawBackground = function(){
     // Draw the outline of the board
     boardOutline.draw();
     
+    
 }
 
 // The update function
@@ -69,7 +67,14 @@ var runLogic = function(){
 
 // The draw function - where we tell everything to draw itself to the screen
 var draw = function(){
-
+    // Draw all our shapes
+    var i = 0;
+    for(i = 0; i < shapes.length; i++)
+    {
+        shapes[i].draw();
+    }
+    
+    // Draw our cursor
     cursor.draw();
 }
     

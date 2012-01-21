@@ -18,7 +18,6 @@ function Cursor () {
     this.isOnSide = true;
     
     this.currentShape = null;
-    this.lastKeyCode = 0;
 }
 
 
@@ -99,15 +98,22 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     // If we're not on a side, then we're in the middle of making a shape.
     if(!this.isOnSide)
     {
-        if(this.lastKeyCode != keyCode)
+        // Create our current shape if we don't yet have one
+        if(!this.currentShape)
         {
-            // Create our current shape if we don't yet have one
-            if(!this.currentShape)
-            {
-                this.currentShape = new Shape();
-            }
-            // Add a point to our shape
-            this.currentShape.addPoint(new Point(this.x, this.y));
+            this.currentShape = new Shape();
+        }
+        // Add a point to our shape
+        this.currentShape.addPoint(new Point(this.x, this.y));    
+    }
+    // Otherwise, if we are on a side, then we've finished our last shape
+    else
+    {
+        if(this.currentShape)
+        {
+            // Give our shape to the Game so it can keep track of it and do shit with it
+            shapes.push(this.currentShape);
+            this.currentShape = null;
         }
     }
     
