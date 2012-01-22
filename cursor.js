@@ -186,7 +186,36 @@ Cursor.prototype.closeOutShape = function(shape)
             this.currentShape.addPoint(new Point(boardOutline.right, boardOutline.bottom));
         }
     }
-     
+    
+    
+    // 2-corner case: cutting across the board
+    // If the line goes from bottom to top (or top to bottom)
+    // decide which half of the screen we're going to make into our shape
+    // (the lesser half)
+    if(this.currentShape.top == boardOutline.top 
+        &&
+        this.currentShape.bottom == boardOutline.bottom)
+    {
+        var middleX = boardOutline.right - boardOutline.left;
+        // Find out where our x is and whether it's to the right of middle, or to the left
+        if(this.currentShape.left <= middleX)
+        {
+            // Find out if we went from top to bottom, or bottom to top
+            if(this.y == boardOutline.top)
+            {
+                // Bottom to top
+                // Add the upper-left and lower-left corners to our shape
+                this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.top));
+                this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.bottom));
+            }
+            else
+            {
+                // Top to bottom
+                this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.bottom));
+                this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.top));
+            }
+        }
+    }
     
     // Lose our reference to the old current shape because we're done with it now
     this.currentShape = null;
