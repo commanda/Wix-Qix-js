@@ -196,12 +196,17 @@ Cursor.prototype.closeOutShape = function(shape)
         &&
         this.currentShape.bottom == boardOutline.bottom)
     {
-        var middleX = (boardOutline.right - boardOutline.left)/2;
+        var middleX = (boardOutline.right + boardOutline.left)/2;
         
-        console.log("middleX: " + middleX + ", my left: " + this.currentShape.left + ", right: " + this.currentShape.right);
+        // Get the average x-value of the start and the end points
+        var x1 = this.currentShape.points[0].x;
+        var x2 = this.currentShape.points[this.currentShape.points.length-1].x;
+        var avg = (x1 + x2)/2;
+        
+        
         
         // Find out where our x is and whether it's to the right of middle, or to the left
-        if(this.currentShape.right <= middleX)
+        if(this.currentShape.right <= middleX || avg <= middleX)
         {
             // Find out if we went from top to bottom, or bottom to top
             if(this.y == boardOutline.top)
@@ -218,7 +223,7 @@ Cursor.prototype.closeOutShape = function(shape)
                 this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.top));
             }
         }
-        if(this.currentShape.left > middleX)
+        else if(this.currentShape.left > middleX || avg > middleX)
         {
             // We cut across on the right hand side, so add the upper right and upper left corners
             // Find out if we went from top to bottom, or bottom to top
@@ -237,6 +242,10 @@ Cursor.prototype.closeOutShape = function(shape)
             }
         
         }
+        
+        
+        
+        
     }
     else if(this.currentShape.left == boardOutline.left 
         &&
@@ -244,8 +253,13 @@ Cursor.prototype.closeOutShape = function(shape)
     {
         var middleY = (boardOutline.bottom - boardOutline.top)/2;
         
+        // Get the average y-value of the start and the end points
+        var y1 = this.currentShape.points[0].y;
+        var y2 = this.currentShape.points[this.currentShape.points.length-1].y;
+        var avg = (y1 + y2)/2;
+        
         // Find out where our y is and whether it's above or below the middle
-        if(this.currentShape.bottom <= middleY)
+        if(this.currentShape.bottom <= middleY || avg <= middleY)
         {
             // Find out if we went from left to right or right to left
             if(this.x == boardOutline.left)
@@ -262,7 +276,7 @@ Cursor.prototype.closeOutShape = function(shape)
                 this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.top));
             }
         }
-        if(this.currentShape.top > middleY)
+        if(this.currentShape.top > middleY || avg > middleY)
         {
             // We cut across on the bottom, so add the upper right and upper left corners
             // Find out if we went from top to bottom, or bottom to top
