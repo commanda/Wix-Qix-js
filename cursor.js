@@ -56,6 +56,12 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     else if(isRightPressed)
         proposed.x += MOVE_AMOUNT;
     
+    // If the proposed point and our current point are the same, no need to do anything
+    if(proposed.x == this.x && proposed.y == this.y)
+    {
+        return;
+    }
+    
     // Find out if it's ok to to travel to this proposed place
     var isOK = isOkToTravel(proposed);
     
