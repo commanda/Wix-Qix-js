@@ -43,24 +43,14 @@ Cursor.prototype.draw = function(){
 }
 
 Cursor.prototype.handleArrowPress = function(keyCode){
-    switch(keyCode)
-    {
-        case DOWN:
-            this.y += MOVE_AMOUNT;
-            break;
-        case UP:
-            this.y -= MOVE_AMOUNT;
-            break;
-        case LEFT:
-            this.x -= MOVE_AMOUNT;
-            break;
-        case RIGHT:
-            this.x += MOVE_AMOUNT;
-            break;
-        default:
-            // do nothing - the key pressed wasn't one of the arrow keys
-            break;
-    }
+    if(isDownPressed)
+        this.y += MOVE_AMOUNT;
+    else if(isUpPressed)
+        this.y -= MOVE_AMOUNT;        
+    else if(isLeftPressed)
+        this.x -= MOVE_AMOUNT;
+    else if(isRightPressed)
+        this.x += MOVE_AMOUNT;
     
     // The cursor isn't on a side of the boardOutline unless we find out below that it is
     this.isOnSide = false;
@@ -70,25 +60,25 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     if(this.y <= boardOutline.top) 
     {
         this.y = boardOutline.top;
-        console.log("top: " + boardOutline.top);
+//        console.log("top: " + boardOutline.top);
         this.isOnSide = true;
     }
     if(this.y >= boardOutline.bottom)
     {
         this.y = boardOutline.bottom;
-        console.log("bot: " + boardOutline.bottom);
+//        console.log("bot: " + boardOutline.bottom);
         this.isOnSide = true;
     }
     if(this.x <= boardOutline.left)
     {
         this.x = boardOutline.left;
-        console.log("left: " + boardOutline.left);
+//        console.log("left: " + boardOutline.left);
         this.isOnSide = true;
     }
     if(this.x >= boardOutline.right)
     {
         this.x = boardOutline.right;
-        console.log("right: " + boardOutline.right);
+//        console.log("right: " + boardOutline.right);
         this.isOnSide = true;
     }
     

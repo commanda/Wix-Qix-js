@@ -34,17 +34,80 @@ for(i = 0; i < bOPoints.length; i++)
 // Here's where we'll keep all our completed shapes
 var shapes = new Array();
 
-$(window).bind("keydown", function(e){
-    
+// What key(s) are being pressed right now
+var isSlowPressed = false;
+var isFastPressed = false;
+var isLeftPressed = false;
+var isUpPressed = false;
+var isRightPressed = false;
+var isDownPressed = false;
+
+$(window).bind("keydown", function(e)
+{
+   
     // If the key that was pressed is one of the 4 arrow keys, send the event to the cursor
     if(e.which >= 37 && e.which <= 40)
     {
         e.preventDefault();
-        //console.log(e.which);
-        cursor.handleArrowPress(e.which);
+        
+        switch(e.which)
+        {
+            case DOWN:
+                isDownPressed = true;
+                break;
+            case UP:
+                isUpPressed = true;
+                break;
+            case LEFT:
+                isLeftPressed = true;
+                break;
+            case RIGHT:
+                isRightPressed = true;
+                break;
+            default:
+                // do nothing - the key pressed wasn't one of the arrow keys
+                break;
+        }
+        
+    }
+    // Pressed the z
+    else if(e.which == 90)
+    {
+        isSlowPressed = true;
+    }
+    // Pressed the x
+    else if(e.which == 88)
+    {
+        isFastPressed = true;
     }
 });
 
+$(window).bind("keyup", function(e)
+{
+    switch(e.which)
+    {
+        case DOWN:
+            isDownPressed = false;
+            break;
+        case UP:
+            isUpPressed = false;
+            break;
+        case LEFT:
+            isLeftPressed = false;
+            break;
+        case RIGHT:
+            isRightPressed = false;
+            break;
+        case 88:
+            isFastPressed = false;
+            break;
+        case 90:
+            isSlowPressed = false;
+            break;
+        default:
+            break;
+    }
+});
 // Wipe the screen by filling it with the background color
 var drawBackground = function(){
     ctx.fillStyle = '#666';
@@ -61,7 +124,8 @@ var drawBackground = function(){
 
 // The update function
 var runLogic = function(){
-
+    
+    cursor.handleArrowPress();
 }
 
 // The draw function - where we tell everything to draw itself to the screen
