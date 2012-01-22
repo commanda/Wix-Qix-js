@@ -42,6 +42,19 @@ var isUpPressed = false;
 var isRightPressed = false;
 var isDownPressed = false;
 
+var isOkToTravel = function(point)
+{
+    var retVal = false;
+    // Either the fast or slow key needs to be pressed, not both (xor)
+    if((isSlowPressed && !isFastPressed) || (!isSlowPressed && isFastPressed))
+    {
+    
+        retVal = true;
+    }
+    
+    return retVal;
+}
+
 $(window).bind("keydown", function(e)
 {
    

@@ -43,14 +43,27 @@ Cursor.prototype.draw = function(){
 }
 
 Cursor.prototype.handleArrowPress = function(keyCode){
+
+    // Work out a proposed next position so we can ask the Game if it's ok to travel there
+    var proposed = new Point(this.x, this.y);
+
     if(isDownPressed)
-        this.y += MOVE_AMOUNT;
+        proposed.y += MOVE_AMOUNT;
     else if(isUpPressed)
-        this.y -= MOVE_AMOUNT;        
+        proposed.y -= MOVE_AMOUNT;        
     else if(isLeftPressed)
-        this.x -= MOVE_AMOUNT;
+        proposed.x -= MOVE_AMOUNT;
     else if(isRightPressed)
-        this.x += MOVE_AMOUNT;
+        proposed.x += MOVE_AMOUNT;
+    
+    // Find out if it's ok to to travel to this proposed place
+    var isOK = isOkToTravel(proposed);
+    
+    if(isOK)
+    {
+        this.x = proposed.x;
+        this.y = proposed.y;
+    }
     
     // The cursor isn't on a side of the boardOutline unless we find out below that it is
     this.isOnSide = false;
@@ -60,25 +73,21 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     if(this.y <= boardOutline.top) 
     {
         this.y = boardOutline.top;
-//        console.log("top: " + boardOutline.top);
         this.isOnSide = true;
     }
     if(this.y >= boardOutline.bottom)
     {
         this.y = boardOutline.bottom;
-//        console.log("bot: " + boardOutline.bottom);
         this.isOnSide = true;
     }
     if(this.x <= boardOutline.left)
     {
         this.x = boardOutline.left;
-//        console.log("left: " + boardOutline.left);
         this.isOnSide = true;
     }
     if(this.x >= boardOutline.right)
     {
         this.x = boardOutline.right;
-//        console.log("right: " + boardOutline.right);
         this.isOnSide = true;
     }
     
@@ -139,6 +148,7 @@ Cursor.prototype.closeOutShape = function(shape)
         
     }
     
+    // 1-corner case:
     // If it started on one wall and ended on another, it needs to add a few more points
     // in order to not make a triangle, so seek out the wall it started on
     if(this.currentShape.bottom == boardOutline.bottom)
