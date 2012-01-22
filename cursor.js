@@ -196,9 +196,12 @@ Cursor.prototype.closeOutShape = function(shape)
         &&
         this.currentShape.bottom == boardOutline.bottom)
     {
-        var middleX = boardOutline.right - boardOutline.left;
+        var middleX = (boardOutline.right - boardOutline.left)/2;
+        
+        console.log("middleX: " + middleX + ", my left: " + this.currentShape.left + ", right: " + this.currentShape.right);
+        
         // Find out where our x is and whether it's to the right of middle, or to the left
-        if(this.currentShape.left <= middleX)
+        if(this.currentShape.right <= middleX)
         {
             // Find out if we went from top to bottom, or bottom to top
             if(this.y == boardOutline.top)
@@ -214,6 +217,69 @@ Cursor.prototype.closeOutShape = function(shape)
                 this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.bottom));
                 this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.top));
             }
+        }
+        if(this.currentShape.left > middleX)
+        {
+            // We cut across on the right hand side, so add the upper right and upper left corners
+            // Find out if we went from top to bottom, or bottom to top
+            if(this.y == boardOutline.top)
+            {
+                // Bottom to top
+                // Add the upper-right and lower-right corners to our shape
+                this.currentShape.addPoint(new Point(boardOutline.right, boardOutline.top));
+                this.currentShape.addPoint(new Point(boardOutline.right, boardOutline.bottom));
+            }
+            else
+            {
+                // Top to bottom
+                this.currentShape.addPoint(new Point(boardOutline.right, boardOutline.bottom));
+                this.currentShape.addPoint(new Point(boardOutline.right, boardOutline.top));
+            }
+        
+        }
+    }
+    else if(this.currentShape.left == boardOutline.left 
+        &&
+        this.currentShape.right == boardOutline.right)
+    {
+        var middleY = (boardOutline.bottom - boardOutline.top)/2;
+        
+        // Find out where our y is and whether it's above or below the middle
+        if(this.currentShape.bottom <= middleY)
+        {
+            // Find out if we went from left to right or right to left
+            if(this.x == boardOutline.left)
+            {
+                // Right to left
+                // Add the upper-left and upper right corners to our shape
+                this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.top));
+                this.currentShape.addPoint(new Point(boardOutline.right, boardOutline.top));
+            }
+            else
+            {
+                // Left to right
+                this.currentShape.addPoint(new Point(boardOutline.right, boardOutline.top));
+                this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.top));
+            }
+        }
+        if(this.currentShape.top > middleY)
+        {
+            // We cut across on the bottom, so add the upper right and upper left corners
+            // Find out if we went from top to bottom, or bottom to top
+            if(this.x == boardOutline.left)
+            {
+                // Right to left
+                // Add the bottom left and bottom right corners
+                this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.bottom));
+                this.currentShape.addPoint(new Point(boardOutline.right, boardOutline.bottom));
+            }
+            else
+            {
+                // Left to right
+                this.currentShape.addPoint(new Point(boardOutline.right, boardOutline.bottom));
+                this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.bottom));
+            }
+        
         }
     }
     
