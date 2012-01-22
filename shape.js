@@ -51,7 +51,6 @@ Shape.prototype.addPoint = function(point) {
     }
     
     this.points.push(point);
-    console.log("pushing point to make " + this.points);
     
     if(point.x < this.left){ this.left = point.x; }
     if(point.x > this.right){ this.right = point.x; }

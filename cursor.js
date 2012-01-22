@@ -118,9 +118,7 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     {
         if(this.currentShape)
         {
-            
             this.closeOutShape(this.currentShape);
-            
         }
     }
     
@@ -133,7 +131,7 @@ Cursor.prototype.handleArrowPress = function(keyCode){
 Cursor.prototype.closeOutShape = function(shape)
 {
 
-    // Add the final point to our shape
+    // Add our current position on the wall to the shape
     this.currentShape.addPoint(new Point(this.x, this.y)); 
 
     // Turn the outline of the shape white, and turn the fill color of the shape to whatever the outline used to be
@@ -142,6 +140,53 @@ Cursor.prototype.closeOutShape = function(shape)
     
     // It's now a closed shape
     this.currentShape.isClosed = true;
+    
+    if(this.currentShape)
+    {
+        console.log("boardOutline.bot: "+ boardOutline.bottom + ", curShape.bottom: "+this.currentShape.bottom);
+
+        console.log("boardOutline.left: "+ boardOutline.left + ", curShape.left: "+this.currentShape.left);
+        
+    }
+    
+    // If it started on one wall and ended on another, it needs to add a few more points
+    // in order to not make a triangle, so seek out the wall it started on
+    if(this.currentShape.bottom == boardOutline.bottom)
+    {
+        if(this.currentShape.left == boardOutline.left)
+        {
+            // Add the lower left corner to the shape
+            this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.bottom));
+        }
+    }
+    if(this.currentShape.left == boardOutline.left)
+    {
+        // This shape started on the left wall
+        
+        // Where did it end?
+        if(this.currentShape.top == boardOutline.top)
+        {
+            // Add the upper left corner to the shape
+            this.currentShape.addPoint(new Point(boardOutline.left, boardOutline.top));
+        }
+    }
+    if(this.currentShape.top == boardOutline.top)
+    {
+        if(this.currentShape.right == boardOutline.right)
+        {
+            // Add the upper right corner to the shape
+            this.currentShape.addPoint(new Point(boardOutline.right, boardOutline.top));
+        }
+    }
+    if(this.currentShape.right == boardOutline.right)
+    {
+        if(this.currentShape.bottom == boardOutline.bottom)
+        {
+            // Add the lower right corner to the shape
+            this.currentShape.addPoint(new Point(boardOutline.right, boardOutline.bottom));
+        }
+    }
+     
     
     // Lose our reference to the old current shape because we're done with it now
     this.currentShape = null;
