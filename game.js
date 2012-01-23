@@ -58,77 +58,85 @@ var isOkToTravel = function(point)
     }
     else
     {
-    
-        // Check if this point is on one of the lines of the shapes we know about
-        var i = 0;
-        var j = 0;
-        for(i = 0; i < shapes.length; i++)
-        {
-            var shape = shapes[i];
-            //console.log("SHAPE["+i+"]");
-            var points = shape.points;
-            
-            var pointA = null;
-            var pointB = null;
-            
-            for(j = 0; j < points.length; j++)
-            {
-                pointA = points[j];
-                // If pointA was the last point in the array, pointB loops around to the front of the array
-                // if the shape is closed
-                if(j < points.length -1)
-                {
-                    pointB = points[j+1];
-                }
-                else
-                {
-                    if(shape.isClosed)
-                    {
-                        pointB = points[0];
-                    }
-                    // If this isn't a closed shape, we're done checking this shape
-                    else break;
-                }
-                
-                //console.log("pointA: " + pointA + ", point: " + point + ", pointB: " + pointB);
-                
-                // If this is a vertical line
-                if(pointA.x == pointB.x && pointB.x == point.x)
-                {
-                    
-                    // If our point is between pointA and pointB
-                    if((pointB.y <= point.y && point.y <= pointA.y)
-                    || (pointA.y <= point.y && point.y <= pointB.y))
-                    {
-                        retVal = true;
-                        break;
-                    }
-                }
-                
-                // If this is a horizontal line
-                if(pointA.y == pointB.y && pointB.y == point.y)
-                {
-                    // If our point is between pointA and pointB
-                    if((pointB.x <= point.x && point.x <= pointA.x)
-                    || (pointA.x <= point.x && point.x <= pointB.x))
-                    {
-                        console.log("YEP");
-                        retVal = true;
-                        break;
-                    }
-                }
-            }
-            // We found a good line, let's return early
-            if(retVal)
-            {
-                break;
-            }
-            
-        }
-    
+       retVal = isPointInExistingShape(point)
     }
     
     return retVal;
+}
+
+var isPointInExistingShape = function(point)
+{
+
+    var retVal = false;
+    // Check if this point is on one of the lines of the shapes we know about
+    var i = 0;
+    var j = 0;
+    for(i = 0; i < shapes.length; i++)
+    {
+        var shape = shapes[i];
+        //console.log("SHAPE["+i+"]");
+        var points = shape.points;
+        
+        var pointA = null;
+        var pointB = null;
+        
+        for(j = 0; j < points.length; j++)
+        {
+            pointA = points[j];
+            // If pointA was the last point in the array, pointB loops around to the front of the array
+            // if the shape is closed
+            if(j < points.length -1)
+            {
+                pointB = points[j+1];
+            }
+            else
+            {
+                if(shape.isClosed)
+                {
+                    pointB = points[0];
+                }
+                // If this isn't a closed shape, we're done checking this shape
+                else break;
+            }
+            
+            //console.log("pointA: " + pointA + ", point: " + point + ", pointB: " + pointB);
+            
+            // If this is a vertical line
+            if(pointA.x == pointB.x && pointB.x == point.x)
+            {
+                
+                // If our point is between pointA and pointB
+                if((pointB.y <= point.y && point.y <= pointA.y)
+                || (pointA.y <= point.y && point.y <= pointB.y))
+                {
+                    retVal = true;
+                    break;
+                }
+            }
+            
+            // If this is a horizontal line
+            if(pointA.y == pointB.y && pointB.y == point.y)
+            {
+                // If our point is between pointA and pointB
+                if((pointB.x <= point.x && point.x <= pointA.x)
+                || (pointA.x <= point.x && point.x <= pointB.x))
+                {
+                    console.log("YEP");
+                    retVal = true;
+                    break;
+                }
+            }
+        }
+        // We found a good line, let's return early
+        if(retVal)
+        {
+            break;
+        }
+        
+    }
+        
+    return retVal;
+    
 }
 
 $(window).bind("keydown", function(e)
