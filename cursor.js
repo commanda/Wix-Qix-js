@@ -56,16 +56,20 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     else if(isRightPressed)
         proposed.x += MOVE_AMOUNT;
     
-    // If the proposed point and our current point are the same, no need to do anything
+    // If the proposed point and our current point are the same, then we're not moving, 
+    // so no need to do anything
     if(proposed.x == this.x && proposed.y == this.y)
     {
         return;
     }
     
-    // Find out if it's ok to to travel to this proposed place
-    var isOK = isOkToTravel(proposed);
+    // Find out if it's ok to to travel to this proposed place, and also
+    // if we should be closing the shape we're on
+    var bools = isOkToTravel(new Point(this.x, this.y), proposed);
     
-    if(isOK)
+    
+    // It's cool if we go ahead and position the cursor at this proposed location
+    if(bools[0])
     {
         this.x = proposed.x;
         this.y = proposed.y;
@@ -96,7 +100,7 @@ Cursor.prototype.handleArrowPress = function(keyCode){
         this.x = boardOutline.right;
         this.isOnSide = true;
     }
-    
+    console.log("bools: "+ bools[0] + " " + bools[1]);
     // If we're not on a side, then we're in the middle of making a shape.
     if(!this.isOnSide)
     {
@@ -118,11 +122,15 @@ Cursor.prototype.handleArrowPress = function(keyCode){
         this.currentShape.addPoint(new Point(this.x, this.y)); 
            
     }
-    // Otherwise, if we are on a side, then we've finished our last shape
-    else
+    // Otherwise, if we are on a side, 
+    // or if the okToTravel told us that we hit an existing line, 
+    // then we've finished our last shape
+    if(this.isOnSide || bools[1])
     {
+        console.log(this.isOnSide+" "+bools[1]+" have current shape? "+(this.currentShape != null));
         if(this.currentShape)
         {
+            console.log("closing out shape");
             this.closeOutShape(this.currentShape);
         }
     }

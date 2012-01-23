@@ -58,3 +58,33 @@ Shape.prototype.addPoint = function(point) {
     if(point.y > this.bottom){ this.bottom = point.y; }
     
 }
+
+Shape.prototype.intersectsShape = function(other) {
+    // This just returns true if the bounding box for this shape intersects the bounding box
+    // of the other shape. Not getting tricky here.
+    console.log("----------------------------------");
+    if(this.left > other.right) { console.log("this.left > other.right" + this.left +", "+ other.right);}
+    if(this.right < other.left) {  console.log("this.right < other.left" + this.right +", "+ other.left);}
+    if(this.top > other.bottom) {  console.log("this.top > other.bottom" + this.top +", "+ other.bottom);}
+     //   || this.bottom < other.top)
+     
+    if(this.bottom < other.top) {  console.log("this.bottom < other.top" + this.bottom +", "+ other.top);}
+    
+    
+    
+    if(    this.left > other.right
+        || this.right < other.left
+        || this.top > other.bottom
+        || this.bottom < other.top)
+    {
+        console.log("they dont intersect");
+        return false;    
+    }
+    console.log("they do intersect");
+    return true;
+}
+
+
+Shape.prototype.toString = function() {
+    return this.points.toString();
+}

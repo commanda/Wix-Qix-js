@@ -43,9 +43,12 @@ var isUpPressed = false;
 var isRightPressed = false;
 var isDownPressed = false;
 
-var isOkToTravel = function(point)
+
+
+var isOkToTravel = function(start, end)
 {
-    var retVal = false;
+    var okToTravel = false;
+    var shouldCloseShape = false;
     
     // If the user is holding down one of the "go" keys (fast or slow),
     // then they can leave the safety of their existing lines.
@@ -54,27 +57,32 @@ var isOkToTravel = function(point)
     // Either the fast or slow key needs to be pressed, not both (xor)
     if((isSlowPressed && !isFastPressed) || (!isSlowPressed && isFastPressed))
     {
-        retVal = true;
-    }
-    else
-    {
-       retVal = isPointInExistingShape(point)
-    }
+        okToTravel = true;
     
-    return retVal;
+        shouldCloseShape = doesLineHitExistingShape(start, end);
+    }
+    console.log("okToTravel: "+okToTravel+ ", shouldCloseShape: "+shouldCloseShape);
+    return new Array(okToTravel, shouldCloseShape);
 }
 
-var isPointInExistingShape = function(point)
+var doesLineHitExistingShape = function(start, end)
 {
+    var seShape = new Shape();
+    seShape.addPoint(start);
+    seShape.addPoint(end);
+    
+    
 
     var retVal = false;
     // Check if this point is on one of the lines of the shapes we know about
     var i = 0;
     var j = 0;
-    for(i = 0; i < shapes.length; i++)
+    // Don't check the final shape in the array - it's the shape we're currently making
+    console.log("starting shapes");
+    for(i = 0; i < shapes.length -1; i++)
     {
         var shape = shapes[i];
-        //console.log("SHAPE["+i+"]");
+        console.log("SHAPE["+i+"]");
         var points = shape.points;
         
         var pointA = null;
@@ -101,6 +109,18 @@ var isPointInExistingShape = function(point)
             
             //console.log("pointA: " + pointA + ", point: " + point + ", pointB: " + pointB);
             
+            // We now have points A and B, make a mini shape out of them so we can do left, right, top, and bottom
+            var abShape = new Shape();
+            abShape.addPoint(pointA);
+            abShape.addPoint(pointB);
+            
+            if(abShape.intersectsShape(seShape))
+            {
+                retVal = true;
+                console.log("abShape: "+abShape+", seShape: "+seShape);
+                break;
+            }
+            /*
             // If this is a vertical line
             if(pointA.x == pointB.x && pointB.x == point.x)
             {
@@ -121,11 +141,11 @@ var isPointInExistingShape = function(point)
                 if((pointB.x <= point.x && point.x <= pointA.x)
                 || (pointA.x <= point.x && point.x <= pointB.x))
                 {
-                    console.log("YEP");
                     retVal = true;
                     break;
                 }
             }
+            */
         }
         // We found a good line, let's return early
         if(retVal)
@@ -134,7 +154,7 @@ var isPointInExistingShape = function(point)
         }
         
     }
-        
+    
     return retVal;
     
 }
