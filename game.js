@@ -49,20 +49,24 @@ var isOkToTravel = function(start, end)
 {
     var okToTravel = false;
     var shouldCloseShape = false;
+    var isOnSide = false;
     
     // If the user is holding down one of the "go" keys (fast or slow),
     // then they can leave the safety of their existing lines.
     // Otherwise, if theyr'e not holding down the "go" key, they have to be on a line.
+    
     
     // Either the fast or slow key needs to be pressed, not both (xor)
     if((isSlowPressed && !isFastPressed) || (!isSlowPressed && isFastPressed))
     {
         okToTravel = true;
     
-        shouldCloseShape = doesLineHitExistingShape(start, end);
+        var array = doesLineHitExistingShape(start, end);
+        shouldCloseShape = array[0];
+        isOnSide = array[1];
     }
     console.log("okToTravel: "+okToTravel+ ", shouldCloseShape: "+shouldCloseShape);
-    return new Array(okToTravel, shouldCloseShape);
+    return new Array(okToTravel, shouldCloseShape, isOnSide);
 }
 
 var isVerticalLine = function(start, end)
@@ -129,6 +133,8 @@ var doesLineHitExistingShape = function(start, end)
     
 
     var retVal = false;
+    var isOnSide = false;
+    
     // Check if this point is on one of the lines of the shapes we know about
     var i = 0;
     var j = 0;
@@ -173,6 +179,16 @@ var doesLineHitExistingShape = function(start, end)
             {
                 retVal = true;
                 console.log("abShape: "+abShape+", seShape: "+seShape);
+                
+                // Check if these two lines are co-incident
+                // If they're both horizontal, or both vertical, at this point we already know they intersect
+                // thus we know they are co-incident
+                if((isVerticalLine(pointA, pointB) && isVerticalLine(advancedStart, end))
+                || (isHorizontalLine(pointA, pointB) && isHorizontalLine(advancedStart, end)))
+                {
+                    isOnSide = true;
+                }
+                
                 break;
             }
             /*
@@ -210,7 +226,7 @@ var doesLineHitExistingShape = function(start, end)
         
     }
     
-    return retVal;
+    return new Array(retVal, isOnSide);
     
 }
 

@@ -19,7 +19,7 @@ function Cursor () {
     
     this.currentShape = null;
     
-    this.lastPoint = null;
+    this.lastPoint = new Point(this.x, this.y);
 }
 
 
@@ -68,6 +68,7 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     var values = isOkToTravel(new Point(this.x, this.y), proposed);
     var okToTravel = values[0];
     var shouldCloseShape = values[1];
+    var isOnSide = values[2];
     
     // It's cool if we go ahead and position the cursor at this proposed location
     if(okToTravel)
@@ -76,39 +77,34 @@ Cursor.prototype.handleArrowPress = function(keyCode){
         this.y = proposed.y;
     }
     
-    // The cursor isn't on a side of the boardOutline unless we find out below that it is
-    this.isOnSide = false;
     
     // Prevent the cursor from going outside the bounds of the canvas
     
     if(this.y <= boardOutline.top) 
     {
         this.y = boardOutline.top;
-        this.isOnSide = true;
     }
     if(this.y >= boardOutline.bottom)
     {
         this.y = boardOutline.bottom;
-        this.isOnSide = true;
     }
     if(this.x <= boardOutline.left)
     {
         this.x = boardOutline.left;
-        this.isOnSide = true;
     }
     if(this.x >= boardOutline.right)
     {
         this.x = boardOutline.right;
-        this.isOnSide = true;
     }
     // If we're not on a side, then we're in the middle of making a shape.
-    if(!this.isOnSide)
+    if(!isOnSide)
     {
         // Create our current shape if we don't yet have one
         if(!this.currentShape)
         {
             this.currentShape = new Shape();
             // Put this shape into the game's shapes array
+            console.log("pushing shape: "+this.currentShape);
             shapes.push(this.currentShape);
             this.currentShape.strokeColor = '#0f6d6c';
             
@@ -122,19 +118,21 @@ Cursor.prototype.handleArrowPress = function(keyCode){
         this.currentShape.addPoint(new Point(this.x, this.y)); 
            
     }
-    // Otherwise, if we are on a side, 
+    // Otherwise, if we just arrived at a side (we weren't before, and now we are on a side)
     // or if the okToTravel told us that we hit an existing line, 
     // then we've finished our last shape
-    if(this.isOnSide || shouldCloseShape)
+    if((!this.isOnSide && isOnSide) || shouldCloseShape)
     {
         if(this.currentShape)
         {
+            console.log("closing out shape: "+this.currentShape);
             this.closeOutShape(this.currentShape);
         }
     }
     
     // Keep this point because we might need it the next time we press a button to know where we just were
     this.lastPoint = new Point(this.x, this.y);
+    this.isOnSide = isOnSide;
     
 }
 
