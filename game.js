@@ -65,10 +65,65 @@ var isOkToTravel = function(start, end)
     return new Array(okToTravel, shouldCloseShape);
 }
 
+var isVerticalLine = function(start, end)
+{
+    if(start.x == end.x)
+    {
+        return true;
+    }
+    return false;
+}
+
+var isHorizontalLine = function(start, end)
+{
+    if(start.y == end.y)
+    {
+        return true;
+    }
+    
+    return false;
+}
+
 var doesLineHitExistingShape = function(start, end)
 {
     var seShape = new Shape();
-    seShape.addPoint(start);
+    
+    // Ignore the start point because we already checked it the last time the cursor moved
+    // Instead, start one point closer to the end point
+    var advancedStart = new Point(start.x, start.y);
+    
+    // Vertical line
+    if(isVerticalLine(start, end))
+    {
+        // Figure out whether to go up or down toward the end point
+        if(end.y > start.y)
+        {
+            // Down
+            advancedStart.y ++;
+        }
+        else
+        {
+            // Up
+            advancedStart.y --;
+        }
+    }
+    // Horizontal line
+    else
+    {
+        // Figure out whether to go left or right toward the end point
+        if(end.x < start.x)
+        {
+            // Left
+            advancedStart.x --;
+        }
+        else
+        {
+            // Right
+            advancedStart.x ++;
+        }
+    }
+    
+    seShape.addPoint(advancedStart);
     seShape.addPoint(end);
     
     
