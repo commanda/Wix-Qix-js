@@ -66,10 +66,11 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     // Find out if it's ok to to travel to this proposed place, and also
     // if we should be closing the shape we're on
     var values = isOkToTravel(new Point(this.x, this.y), proposed);
-    
+    var okToTravel = values[0];
+    var shouldCloseShape = values[1];
     
     // It's cool if we go ahead and position the cursor at this proposed location
-    if(values[0])
+    if(okToTravel)
     {
         this.x = proposed.x;
         this.y = proposed.y;
@@ -124,7 +125,7 @@ Cursor.prototype.handleArrowPress = function(keyCode){
     // Otherwise, if we are on a side, 
     // or if the okToTravel told us that we hit an existing line, 
     // then we've finished our last shape
-    if(this.isOnSide || values[1])
+    if(this.isOnSide || shouldCloseShape)
     {
         if(this.currentShape)
         {
