@@ -13,7 +13,7 @@ function Cursor () {
     // Where the cursor is on the screen (its upper left corner)
     this.pos = new Point(30, 30);
     
-    this.lastPoint = new Point(this.pos.x, this.pos.y);
+    this.lastPos = new Point(this.pos.x, this.pos.y);
 }
 
 
@@ -22,18 +22,18 @@ Cursor.prototype.draw = function(){
 
     
     // Draw the cursor itself
-    ctx.fillStyle = this.color;
-    ctx.strokeStyle = this.color;
-    ctx.lineWidth = 3;
+    ctx2.fillStyle = this.color;
+    ctx2.strokeStyle = this.color;
+    ctx2.lineWidth = 3;
     // Draw a diamond
-    ctx.beginPath();
-    ctx.moveTo(this.pos.x - (this.size/2), this.pos.y);
-    ctx.lineTo(this.pos.x, this.pos.y - (this.size/2));
-    ctx.lineTo(this.pos.x + (this.size/2), this.pos.y);
-    ctx.lineTo(this.pos.x, this.pos.y + (this.size/2));
-    ctx.lineTo(this.pos.x - (this.size/2), this.pos.y);
-    ctx.stroke();
-    ctx.closePath();
+    ctx2.beginPath();
+    ctx2.moveTo(this.pos.x - (this.size/2), this.pos.y);
+    ctx2.lineTo(this.pos.x, this.pos.y - (this.size/2));
+    ctx2.lineTo(this.pos.x + (this.size/2), this.pos.y);
+    ctx2.lineTo(this.pos.x, this.pos.y + (this.size/2));
+    ctx2.lineTo(this.pos.x - (this.size/2), this.pos.y);
+    ctx2.stroke();
+    ctx2.closePath();
 }
 
 
@@ -50,5 +50,18 @@ Cursor.prototype.tick = function()
     else if(isDownPressed)
         this.pos.y += MOVE_AMOUNT;
         
-    this.lastPoint = new Point(this.pos.x, this.pos.y);
+        
+        
+    // Add this chunk of movement as a line into the back buffer
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 3;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(this.lastPos.x, this.lastPos.y);
+    ctx.lineTo(this.pos.x, this.pos.y);
+    ctx.stroke();
+    ctx.closePath();
+
+    
+    this.lastPos = new Point(this.pos.x, this.pos.y);
 }

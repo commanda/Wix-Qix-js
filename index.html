@@ -14,10 +14,32 @@
             margin-left: auto;
             margin-right: auto;
         }
+        
+        .container {
+            position: relative;
+        }
+        
+        .container canvas {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+        
+        #canv {
+            z-order: 1;
+        }
+        
+        #canv2 {
+            z-order: 2;
+        }
+        
         </style>
     </head>
     <body>
-        <canvas id='canv'></canvas>
+        <div class="container">
+            <canvas id='canv'></canvas>
+            <canvas id='canv2'></canvas>
+        </div>
         
         <script src="http://code.jquery.com/jquery-1.7.1.js"></script>
         <script src="point.js"></script>

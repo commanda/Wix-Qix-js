@@ -19,12 +19,22 @@ var isDownPressed = false;
 
 // Get a reference to the canvas element from the html
 var canvas = document.getElementById('canv');
+var canvas2 = document.getElementById('canv2');
+
 
 // Get a reference to the context, which is what we draw into
 var ctx = canvas.getContext('2d');
+var ctx2 = canvas2.getContext('2d');
 
-canvas.width = screenWidth;
-canvas.height = screenHeight;
+canvas.width = canvas2.width = screenWidth;
+canvas.height = canvas2.height = screenHeight;
+
+
+
+// Create an ImageData object.
+var buffer;
+var pix;
+
 
 // Fill the background with a color
 ctx.fillStyle = '#666';
@@ -43,9 +53,6 @@ ctx.lineTo(30, 30);
 ctx.stroke();
 ctx.closePath();
 
-// Create an ImageData object.
-var buffer = ctx.getImageData(0, 0, screenWidth, screenHeight);
-var pix = buffer.data;
 
 // Fill the buffer with gray for now, black for realz later
 // var n = 0;
@@ -139,16 +146,18 @@ $(window).bind("keyup", function(e)
             break;
     }
 });
+
 // Wipe the screen by filling it with the background color
-var drawBackground = function(){
-    ctx.fillStyle = '#0F0';
-    ctx.beginPath();
-    ctx.rect(0, 0, screenWidth, screenHeight);
-    ctx.closePath();
-    ctx.fill();
+var drawBackground = function()
+{
+
+    // Save out the ctx into our buffer for reference in the next tick
+    buffer = ctx.getImageData(0, 0, screenWidth, screenHeight);
+    pix = buffer.data;
+
     
-    // Draw the ImageData object at the given (x,y) coordinates.
-    ctx.putImageData(buffer, 0,0);
+    // Clear the front canvas
+    ctx2.clearRect(0, 0, screenWidth, screenHeight);
 }
 
 // The update function
@@ -160,7 +169,6 @@ var runLogic = function()
 // The draw function - where we tell everything to draw itself to the screen
 var draw = function()
 {
-    
     // Draw our cursor
     cursor.draw();
 }
