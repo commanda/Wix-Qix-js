@@ -12,28 +12,54 @@ var ctx = canvas.getContext('2d');
 canvas.width = screenWidth;
 canvas.height = screenHeight;
 
+// Fill the background with a color
+ctx.fillStyle = '#666';
+ctx.fillRect(0, 0, screenWidth, screenHeight);
+
+// Draw the bounding rectangle into the canvas
+    
+ctx.strokeStyle = '#fff';
+ctx.lineWidth = 3;
+
+ctx.beginPath();
+ctx.moveTo(30, 30);
+ctx.lineTo(screenWidth - 30, 30);
+ctx.lineTo(screenWidth - 30, screenHeight - 30);
+ctx.lineTo(30, screenHeight - 30);
+ctx.lineTo(30, 30);
+ctx.stroke();
+ctx.closePath();
+
+// Create an ImageData object.
+var buffer = ctx.getImageData(0, 0, screenWidth, screenHeight);
+var pix = buffer.data;
+
+// Fill the buffer with gray for now, black for realz later
+// var n = 0;
+// for (var i = 0, n = pix.length; i < n; i += 4) {
+//   pix[i  ] = 100; // red channel
+//   pix[i+1] = 100; // green channel
+//   pix[i+2] = 100; // blue channel
+//   pix[i+3] = 255; // alpha channel
+// }
+
+// Add the edge of the board
+// for(x = 30*4; x < (screenWidth - 30)*4; x += 4)
+// {
+//     var y = 30 * 4;
+//     var p = (screenWidth * y) + x;
+//     // White
+//     pix[p ] = pix[p+1] = pix[p+2] = pix[p+3] = 255;
+// 
+// }
+
+
 // Create the cursor object
 var cursor = new Cursor();
 
 // Declare the timer that controls the game loop
 var timeout;
 
-var boardOutline = new Shape();
-boardOutline.strokeColor = '#fff';
-boardOutline.isClosed = true;
-var bOPoints = new Array(new Point(30, 30), 
-                                new Point(screenWidth-30, 30),
-                                new Point(screenWidth-30, screenHeight-30),
-                                new Point(30, screenHeight-30));
-var i = 0;
-for(i = 0; i < bOPoints.length; i++)
-{
-    boardOutline.addPoint(bOPoints[i]);
-}
-
-// Here's where we'll keep all our completed shapes
-var shapes = new Array();
-shapes.push(boardOutline);
 
 // What key(s) are being pressed right now
 var isSlowPressed = false;
@@ -88,147 +114,6 @@ var isHorizontalLine = function(start, end)
     return false;
 }
 
-var doesLineHitExistingShape = function(start, end)
-{
-    var seShape = new Shape();
-    
-    // Ignore the start point because we already checked it the last time the cursor moved
-    // Instead, start one point closer to the end point
-    var advancedStart = new Point(start.x, start.y);
-    
-    // Vertical line
-    if(isVerticalLine(start, end))
-    {
-        // Figure out whether to go up or down toward the end point
-        if(end.y > start.y)
-        {
-            // Down
-            advancedStart.y ++;
-        }
-        else
-        {
-            // Up
-            advancedStart.y --;
-        }
-    }
-    // Horizontal line
-    else
-    {
-        // Figure out whether to go left or right toward the end point
-        if(end.x < start.x)
-        {
-            // Left
-            advancedStart.x --;
-        }
-        else
-        {
-            // Right
-            advancedStart.x ++;
-        }
-    }
-    
-    seShape.addPoint(advancedStart);
-    seShape.addPoint(end);
-    
-    
-
-    var retVal = false;
-    var isOnSide = false;
-    
-    // Check if this point is on one of the lines of the shapes we know about
-    var i = 0;
-    var j = 0;
-    // Don't check the final shape in the array - it's the shape we're currently making
-    console.log("starting shapes");
-    for(i = 0; i < shapes.length -1; i++)
-    {
-        var shape = shapes[i];
-        console.log("SHAPE["+i+"]");
-        var points = shape.points;
-        
-        var pointA = null;
-        var pointB = null;
-        
-        for(j = 0; j < points.length; j++)
-        {
-            pointA = points[j];
-            // If pointA was the last point in the array, pointB loops around to the front of the array
-            // if the shape is closed
-            if(j < points.length -1)
-            {
-                pointB = points[j+1];
-            }
-            else
-            {
-                if(shape.isClosed)
-                {
-                    pointB = points[0];
-                }
-                // If this isn't a closed shape, we're done checking this shape
-                else break;
-            }
-            
-            //console.log("pointA: " + pointA + ", point: " + point + ", pointB: " + pointB);
-            
-            // We now have points A and B, make a mini shape out of them so we can do left, right, top, and bottom
-            var abShape = new Shape();
-            abShape.addPoint(pointA);
-            abShape.addPoint(pointB);
-            
-            if(abShape.intersectsShape(seShape))
-            {
-                retVal = true;
-                console.log("abShape: "+abShape+", seShape: "+seShape);
-                
-                // Check if these two lines are co-incident
-                // If they're both horizontal, or both vertical, at this point we already know they intersect
-                // thus we know they are co-incident
-                if((isVerticalLine(pointA, pointB) && isVerticalLine(advancedStart, end))
-                || (isHorizontalLine(pointA, pointB) && isHorizontalLine(advancedStart, end)))
-                {
-                    isOnSide = true;
-                }
-                
-                break;
-            }
-            /*
-            // If this is a vertical line
-            if(pointA.x == pointB.x && pointB.x == point.x)
-            {
-                
-                // If our point is between pointA and pointB
-                if((pointB.y <= point.y && point.y <= pointA.y)
-                || (pointA.y <= point.y && point.y <= pointB.y))
-                {
-                    retVal = true;
-                    break;
-                }
-            }
-            
-            // If this is a horizontal line
-            if(pointA.y == pointB.y && pointB.y == point.y)
-            {
-                // If our point is between pointA and pointB
-                if((pointB.x <= point.x && point.x <= pointA.x)
-                || (pointA.x <= point.x && point.x <= pointB.x))
-                {
-                    retVal = true;
-                    break;
-                }
-            }
-            */
-        }
-        // We found a good line, let's return early
-        if(retVal)
-        {
-            break;
-        }
-        
-    }
-    
-    return new Array(retVal, isOnSide);
-    
-}
 
 $(window).bind("keydown", function(e)
 {
@@ -298,27 +183,25 @@ $(window).bind("keyup", function(e)
 });
 // Wipe the screen by filling it with the background color
 var drawBackground = function(){
-    ctx.fillStyle = '#666';
+    ctx.fillStyle = '#0F0';
     ctx.beginPath();
     ctx.rect(0, 0, screenWidth, screenHeight);
     ctx.closePath();
     ctx.fill();
+    
+    // Draw the ImageData object at the given (x,y) coordinates.
+    ctx.putImageData(buffer, 0,0);
 }
 
 // The update function
-var runLogic = function(){
+var runLogic = function()
+{
     
-    cursor.handleArrowPress();
 }
 
 // The draw function - where we tell everything to draw itself to the screen
-var draw = function(){
-    // Draw all our shapes
-    var i = shapes.length-1;
-    for(; i >= 0; i--)
-    {
-        shapes[i].draw();
-    }
+var draw = function()
+{
     
     // Draw our cursor
     cursor.draw();
