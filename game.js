@@ -71,48 +71,6 @@ var isDownPressed = false;
 
 
 
-var isOkToTravel = function(start, end)
-{
-    var okToTravel = false;
-    var shouldCloseShape = false;
-    var isOnSide = false;
-    
-    // If the user is holding down one of the "go" keys (fast or slow),
-    // then they can leave the safety of their existing lines.
-    // Otherwise, if theyr'e not holding down the "go" key, they have to be on a line.
-    
-    
-    // Either the fast or slow key needs to be pressed, not both (xor)
-    if((isSlowPressed && !isFastPressed) || (!isSlowPressed && isFastPressed))
-    {
-        okToTravel = true;
-    
-        var array = doesLineHitExistingShape(start, end);
-        shouldCloseShape = array[0];
-        isOnSide = array[1];
-    }
-    console.log("okToTravel: "+okToTravel+ ", shouldCloseShape: "+shouldCloseShape);
-    return new Array(okToTravel, shouldCloseShape, isOnSide);
-}
-
-var isVerticalLine = function(start, end)
-{
-    if(start.x == end.x)
-    {
-        return true;
-    }
-    return false;
-}
-
-var isHorizontalLine = function(start, end)
-{
-    if(start.y == end.y)
-    {
-        return true;
-    }
-    
-    return false;
-}
 
 
 $(window).bind("keydown", function(e)
@@ -196,7 +154,7 @@ var drawBackground = function(){
 // The update function
 var runLogic = function()
 {
-    
+    cursor.tick();
 }
 
 // The draw function - where we tell everything to draw itself to the screen
