@@ -43,7 +43,7 @@ ctx.fillRect(0, 0, screenWidth, screenHeight);
 // Draw the bounding rectangle into the canvas  
 ctx.strokeStyle = '#fff';
 ctx.lineWidth = 3;
-ctx.lineCap = "round";
+ctx.lineCap = "square";
 ctx.beginPath();
 ctx.moveTo(30, 30);
 ctx.lineTo(screenWidth - 30, 30);

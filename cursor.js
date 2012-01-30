@@ -55,7 +55,7 @@ Cursor.prototype.tick = function()
     // Add this chunk of movement as a line into the back buffer
     ctx.strokeStyle = '#fff';
     ctx.lineWidth = 3;
-    ctx.lineCap = "round";
+    ctx.lineCap = "square";
     ctx.beginPath();
     ctx.moveTo(this.lastPos.x, this.lastPos.y);
     ctx.lineTo(this.pos.x, this.pos.y);
