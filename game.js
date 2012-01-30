@@ -3,6 +3,20 @@
 var screenWidth = 500;
 var screenHeight = 500;
 
+// Create the cursor object
+var cursor = new Cursor();
+
+// Declare the timer that controls the game loop
+var timeout;
+
+// What key(s) are being pressed right now
+var isSlowPressed = false;
+var isFastPressed = false;
+var isLeftPressed = false;
+var isUpPressed = false;
+var isRightPressed = false;
+var isDownPressed = false;
+
 // Get a reference to the canvas element from the html
 var canvas = document.getElementById('canv');
 
@@ -16,8 +30,7 @@ canvas.height = screenHeight;
 ctx.fillStyle = '#666';
 ctx.fillRect(0, 0, screenWidth, screenHeight);
 
-// Draw the bounding rectangle into the canvas
-    
+// Draw the bounding rectangle into the canvas  
 ctx.strokeStyle = '#fff';
 ctx.lineWidth = 3;
 ctx.lineCap = "round";
@@ -54,20 +67,7 @@ var pix = buffer.data;
 // }
 
 
-// Create the cursor object
-var cursor = new Cursor();
 
-// Declare the timer that controls the game loop
-var timeout;
-
-
-// What key(s) are being pressed right now
-var isSlowPressed = false;
-var isFastPressed = false;
-var isLeftPressed = false;
-var isUpPressed = false;
-var isRightPressed = false;
-var isDownPressed = false;
 
 
 

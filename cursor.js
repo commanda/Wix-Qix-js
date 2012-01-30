@@ -39,6 +39,7 @@ Cursor.prototype.draw = function(){
 
 Cursor.prototype.tick = function()
 {
+    
     // Move if there's a key being pressed currently
     if(isLeftPressed)
         this.pos.x -= MOVE_AMOUNT;
@@ -48,4 +49,6 @@ Cursor.prototype.tick = function()
         this.pos.y -= MOVE_AMOUNT;
     else if(isDownPressed)
         this.pos.y += MOVE_AMOUNT;
+        
+    this.lastPoint = new Point(this.pos.x, this.pos.y);
 }
