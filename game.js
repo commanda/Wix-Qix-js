@@ -20,7 +20,7 @@ ctx.fillRect(0, 0, screenWidth, screenHeight);
     
 ctx.strokeStyle = '#fff';
 ctx.lineWidth = 3;
-
+ctx.lineCap = "round";
 ctx.beginPath();
 ctx.moveTo(30, 30);
 ctx.lineTo(screenWidth - 30, 30);
