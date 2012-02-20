@@ -37,6 +37,17 @@ Cursor.prototype.draw = function(){
 }
 
 
+var isVertical = function(pointA, pointB)
+{
+    if(pointA.x == pointB.x)
+        return true;
+    return false;
+}
+var isHorizontal = function(pointA, pointB)
+{
+    return !isVertical(pointA, pointB);
+}
+
 Cursor.prototype.tick = function()
 {
     
@@ -49,9 +60,62 @@ Cursor.prototype.tick = function()
         this.pos.y -= MOVE_AMOUNT;
     else if(isDownPressed)
         this.pos.y += MOVE_AMOUNT;
-        
-        
-        
+
+    // If we haven't moved, no need to do anything else
+    if(this.pos.x == this.lastPos.x && this.pos.y == this.lastPos.y)
+    {
+        return;
+    }
+
+    // Find out if we just hit or crossed an existing line
+    // Save out the ctx into our buffer for reference in the next tick
+    buffer = ctx.getImageData(0, 0, screenWidth, screenHeight);
+    pix = buffer.data;
+    
+    
+    var hitLine = false;
+    
+    // Check the pix array for any pixels that are white between our last pos and our current pos
+    if(isVertical(this.lastPos, this.pos))
+    {
+        // going up?
+        if(this.lastPos.y < this.pos.y)
+        {
+
+        }
+        else
+        {
+            for(var y = this.lastPos.y; y < this.pos.y; y++)
+            {
+                var index = (screenWidth * 4 * this.lastPos.x) + (this.lastPos.y + y) * 4;
+                var red = pix[index];
+                var green = pix[index + 1];
+                var blue = pix[index + 2];
+                var alpha = pix[index + 3];
+                
+                // Just for debug, paint these pixels green
+                pix[index] = 0;
+                pix[index+1] = 255;
+                pix[index+2] = 0;
+                pix[index+3] = 255;
+                
+                if(red == 255 && green == 255 && blue == 255 && alpha == 255)
+                {
+                    hitLine = true;
+                    break;
+                }
+            }
+        }
+//         var red0 = pix[(screenWidth * 4 * this.lastPos.x) + this.lastPos.y * 4];
+//         var red1 = pix[(screenWidth * 4 * this.lastPos.x) + (this.lastPos.y + 1) * 4];
+//         var red2 = pix[(screenWidth * 4 * this.lastPos.x) + (this.lastPos.y + 2) * 4];
+//         var red3 = pix[(screenWidth * 4 * this.lastPos.x) + (this.lastPos.y + 3) * 4];
+    }
+    else 
+    {
+    
+    }
+
     // Add this chunk of movement as a line into the back buffer
     ctx.strokeStyle = '#fff';
     ctx.lineWidth = 3;
@@ -61,6 +125,7 @@ Cursor.prototype.tick = function()
     ctx.lineTo(this.pos.x, this.pos.y);
     ctx.stroke();
     ctx.closePath();
+
 
     
     this.lastPos = new Point(this.pos.x, this.pos.y);

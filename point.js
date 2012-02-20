@@ -27,5 +27,12 @@ var add = function(pointA, pointB)
 
 var interpolate = function(pointA, pointB, percent) 
 {
-    return add(multiply(pointA, 1.0 - percent, multiply(pointB, percent));
+    return add(multiply(pointA, 1.0 - percent, multiply(pointB, percent)));
+}
+
+var distance = function(pointA, pointB)
+{
+    var xsquared = (pointA.x-pointB.x) * (pointA.x-pointB.x);
+    var ysquared = (pointA.y-pointB.y) * (pointA.y-pointB.y);
+    return Math.sqrt(xsquared + ysquared);
 }

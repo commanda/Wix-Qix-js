@@ -149,13 +149,7 @@ $(window).bind("keyup", function(e)
 
 // Wipe the screen by filling it with the background color
 var drawBackground = function()
-{
-
-    // Save out the ctx into our buffer for reference in the next tick
-    buffer = ctx.getImageData(0, 0, screenWidth, screenHeight);
-    pix = buffer.data;
-
-    
+{    
     // Clear the front canvas
     ctx2.clearRect(0, 0, screenWidth, screenHeight);
 }
